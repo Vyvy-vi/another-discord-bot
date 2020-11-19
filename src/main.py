@@ -2,16 +2,11 @@ import discord
 import os
 from discord.ext import commands, tasks
 from itertools import cycle
-from pymongo import MongoClient
 from utils import get_environment_variable
 
-TOKEN = get_environment_variable("DISCORD_BOT_TOKEN")
+TOKEN = get_environment_variable("ANOTHER_BOT_TOKEN")
 
 PREFIX = '.'
-
-MONGO_CONNECTION_STRING = get_environment_variable("MONGO_CONNECTION_STRING")
-DB_CLIENT = MongoClient(MONGO_CONNECTION_STRING)
-db = DB_CLIENT.get_database('users_db')
 
 intents = discord.Intents(messages= True, guilds= True)
 bot = commands.Bot(command_prefix = PREFIX, intents=intents)
