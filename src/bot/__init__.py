@@ -1,6 +1,9 @@
+import discord
+from datetime import datetime
 from discord import Intents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext.commands import Bot as BotBase
+from discord import Embed
 
 PREFIX = '.'
 OWNER_IDS = [558192816308617227]
@@ -40,6 +43,19 @@ class Bot(BotBase):
 
             channel = self.get_channel(779383905798193193)
             await channel.send("Now Online")
+
+            embed = Embed(title='Now Online...!',
+                          description='Bot is now online',
+                          colour=discord.Colour.red(),
+                          timestamp=datetime.utcnow())
+            fields = [("Version", f'v{self.VERSION}', True),
+                      ("GUILD", self.guild.name, True)]
+            for name, value, inline in fields:
+                embed.add_field(name=name, value=value, inline=inline)
+            embed.set_author(name='another-bot', icon_url=self.guild.icon_url)
+            embed.set_footer(text='This is a footer')
+
+            await channel.send(embed=embed)
         else:
             print('Bot reconnected...')
 

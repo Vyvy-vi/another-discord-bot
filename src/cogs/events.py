@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 
 
-
 class EventsCog(commands.Cog):
     """EventsCog"""
 
@@ -23,7 +22,6 @@ class EventsCog(commands.Cog):
         """
         print(f'{user} was banned from {guild.name}-{guild.id}')
 
-
     @commands.Cog.listener()
     async def on_member_join(self, guild, user):
         """Event listener which is called when a user joins the guild
@@ -32,7 +30,6 @@ class EventsCog(commands.Cog):
         """
         print(f'{user} joined {guild.name}-{guild.id}')
 
-
     @commands.Cog.listener()
     async def on_member_remove(self, guild, user):
         """Event listener which is called when a user leaves the guild
@@ -40,6 +37,7 @@ class EventsCog(commands.Cog):
         http://discord.py.readthedocs.io/en/rewrite/api.html#discord.on_member_remove
         """
         print(f'{user} has left {guild.name}-{guild.id}')
+
 
 # The setup function below is neccesarry. Remember we give bot.add_cog() the name of the class in this case EventsCog.
 def setup(bot):

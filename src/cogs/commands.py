@@ -11,18 +11,18 @@ class CommandsCog(commands.Cog):
     @commands.guild_only()
     async def ping(self, ctx):
         """Command which pings the bot"""
-        phrase=["I am alive...",
-                "I was definitely not sleeping...",
-                "I'm still here",
-                "You are using a ping command? Why?",
-                "You disturbed me. I was sleeping man....",
-                "At your service.",
-                "Yah the bot's online.",
-                "Hiiiiiii",
-                "boink",
-                "beep boop, boop beep",
-                "Why you playin' ping pong."]
-        ph=random.choice(phrase)
+        phrase = ["I am alive...",
+                  "I was definitely not sleeping...",
+                  "I'm still here",
+                  "You are using a ping command? Why?",
+                  "You disturbed me. I was sleeping man....",
+                  "At your service.",
+                  "Yah the bot's online.",
+                  "Hiiiiiii",
+                  "boink",
+                  "beep boop, boop beep",
+                  "Why you playin' ping pong."]
+        ph = random.choice(phrase)
         lsm = round((self.bot.latency) * 100)
         embed = discord.Embed(title='**pong...!**', description=f"_{ph}_ \n**~{lsm} ms taken**...", color=discord.Color.gold())
 
@@ -35,7 +35,7 @@ class CommandsCog(commands.Cog):
 
     @commands.command(name='embedstuff', aliases=['embedstuffy'])
     async def embed_stuff(self, ctx):
-        embed = discord.Embed(title='**EMBED EXAMPLE**',description="Here's some stuff...",color=discord.Color.green())
+        embed = discord.Embed(title='**EMBED EXAMPLE**', description="Here's some stuff...", color=discord.Color.green())
 
         embed.add_field(name='Field1', value='val1')
         embed.add_field(name='Field2', value='val2', inline=False)
@@ -49,6 +49,7 @@ class CommandsCog(commands.Cog):
         embed.add_field(name='Field10', value='val10')
         embed.set_footer(text='<footer-text>')
         await ctx.send(embed=embed)
+
 
 # The setup fucntion below is neccesarry. Remember we give bot.add_cog() the name of the class in this case CommandsCog.
 # When we load the cog, we use the name of the file.
