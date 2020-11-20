@@ -4,7 +4,7 @@ from discord import Intents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext.commands import Bot as BotBase
 from discord import Embed
-
+from discord.ext.commands import CommandNotFound
 PREFIX = '.'
 OWNER_IDS = [558192816308617227]
 
@@ -35,6 +35,24 @@ class Bot(BotBase):
     async def on_disconnect(self):
         print("Bot disconnected...")
 
+    async def on_error(self, err, *args, **kwargs):
+        if err == "on_command_error":
+            await args[0].send("Something went wrong")
+
+        channel = self.get_channel(779383905798193193)
+        await channel.send(f"```An Error Occured-\n{err}```")
+        raise
+
+    async def on_command_error(self, ctx, exc):
+        if isinstance(exc, CommandNotFound):
+            await ctx.send('CommandNotFound')
+
+        elif hasattr(exc, "original"):
+            raise exc.original
+
+        else:
+            raise exc
+
     async def on_ready(self):
         if not self.ready:
             self.ready = True
@@ -53,7 +71,7 @@ class Bot(BotBase):
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
             embed.set_author(name='another-bot', icon_url=self.guild.icon_url)
-            embed.set_footer(text='This is a footer')
+            embed.set_footer(text='time to do some epic shit')
 
             await channel.send(embed=embed)
         else:
