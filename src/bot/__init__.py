@@ -7,6 +7,7 @@ from discord import Intents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from discord.ext.commands import Bot as BotBase
+from discord.ext.commands import Context
 from discord import Embed
 from discord.ext.commands import CommandNotFound
 
@@ -65,6 +66,15 @@ class Bot(BotBase):
         channel = self.get_channel(779383905798193193)
         await channel.send('----timed-message----')
 
+    async def process_commands(self, message):
+        ctx = await self.get_context(message, cls=Context)
+
+        if ctx.command is not None and ctx.guild is not None:
+            if self.ready:
+                await self.invoke(ctx)
+            else:
+                await ctx.send('I\'m not ready to recieve commands. Please wait a few seconds...')
+
     async def on_connect(self):
         print("  Bot connected....")
 
@@ -99,7 +109,7 @@ class Bot(BotBase):
             while not self.cogs_ready.all_ready():
                 await sleep(0.5)
 
-            await self.stdout.send("Bot is Online")
+            await self.stdout.send("[INFO]: Bot is Online")
             embed = Embed(title='Now Online...!',
                           description='Bot is now online',
                           colour=discord.Colour.red(),
@@ -118,7 +128,8 @@ class Bot(BotBase):
             print('Bot reconnected...')
 
     async def on_message(self, message):
-        pass
+        if not message.author.bot:
+            await self.process_commands(message)
 
 
 bot = Bot()
