@@ -1,8 +1,10 @@
 from discord.ext.commands import Cog
 from discord.ext.commands import command
-from random import choice, randint
+
 from typing import Optional
 from discord import Member
+from discord.ext.commands import BadArgument
+from random import randint, choice
 
 
 class Fun(Cog):
@@ -16,12 +18,20 @@ class Fun(Cog):
     @command(name='dice', aliases=['roll'])
     async def roll_dice(self, ctx, die_string: str):
         dice, value = list(map(int, die_string.split('d')))
-        rolls = [randint(1, value) for _ in range(dice)]
-        await ctx.send(" + ".join(list(map(str, rolls))) + f'= {sum(rolls)}')
+        if dice <= 30:
+            rolls = [randint(1, value) for _ in range(dice)]
+            await ctx.send(" + ".join(list(map(str, rolls))) + f'= {sum(rolls)}')
+        else:
+            await ctx.send("ERROR- Can't roll that many die. Try again later")
 
     @command(name='slap', aliases=['hit'])
     async def slap_member(self, ctx, member: Member, *, reason: Optional[str] = "no reason"):
         await ctx.send(f'{ctx.author.display_name} slapped {member.mention} for {reason}')
+
+    @slap_member.error
+    async def slap_member_error(self, ctx, exc):
+        if isinstance(exc.original, BadArgument):
+            await ctx.send("Can't find that member...")
 
     @command(name='echo', aliases=['say'])
     async def echo_message(self, ctx, *, message):

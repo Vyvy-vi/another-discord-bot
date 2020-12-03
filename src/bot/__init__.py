@@ -9,13 +9,15 @@ from apscheduler.triggers.cron import CronTrigger
 from discord.ext.commands import Bot as BotBase
 from discord.ext.commands import Context
 from discord import Embed
-from discord.ext.commands import CommandNotFound
+from discord.errors import HTTPException, Forbidden
+from discord.ext.commands import (CommandNotFound, BadArgument, MissingRequiredArgument)
 
 from ..db import db
 
 PREFIX = '.'
 OWNER_IDS = [558192816308617227]
 COGS = [path.split("/")[-1][:-3] for path in glob("./src/cogs/*.py")]
+IGNORE_EXCEPTIONS = (CommandNotFound, BadArgument)
 
 
 class Bot_Ready(object):
@@ -89,8 +91,16 @@ class Bot(BotBase):
         raise
 
     async def on_command_error(self, ctx, exc):
-        if isinstance(exc, CommandNotFound):
-            await ctx.send('CommandNotFound')
+        if any([isinstance(exc, error) for error in IGNORE_EXCEPTIONS]):
+            pass
+        elif isinstance(exc, MissingRequiredArgument):
+            await ctx.send('Required Arguments are missing...')
+
+        elif isinstance(exc.original, HTTPException):
+            await ctx.send("Unable to send message...")
+
+        elif isinstance(exc.original, Forbidden):
+            await ctx.send("I do not have permissions to do that...")
 
         elif hasattr(exc, "original"):
             raise exc.original
