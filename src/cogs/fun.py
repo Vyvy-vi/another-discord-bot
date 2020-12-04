@@ -1,10 +1,10 @@
 from aiohttp import request
 
-from discord.ext.commands import Cog
+from discord.ext.commands import Cog, BucketType
 from discord.ext.commands import command, cooldown
 
 from typing import Optional
-from discord import Member, Embed, BucketType
+from discord import Member, Embed
 from discord.ext.commands import BadArgument
 from random import randint, choice
 
@@ -18,6 +18,7 @@ class Fun(Cog):
         await ctx.send(f"{choice(('Hi','Hello','Hey','Heya'))} {ctx.author.mention}!")
 
     @command(name='dice', aliases=['roll'])
+    @cooldown(1, 60, BucketType.user)
     async def roll_dice(self, ctx, die_string: str):
         dice, value = list(map(int, die_string.split('d')))
         if dice <= 30:
@@ -36,6 +37,7 @@ class Fun(Cog):
             await ctx.send("Can't find that member...")
 
     @command(name='echo', aliases=['say'])
+    @cooldown(1, 600, BucketType.guild)
     async def echo_message(self, ctx, *, message):
         await ctx.message.delete()
         await ctx.send(message)
