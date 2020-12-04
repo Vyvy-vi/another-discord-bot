@@ -1,8 +1,10 @@
+from aiohttp import request
+
 from discord.ext.commands import Cog
-from discord.ext.commands import command
+from discord.ext.commands import command, cooldown
 
 from typing import Optional
-from discord import Member
+from discord import Member, Embed, BucketType
 from discord.ext.commands import BadArgument
 from random import randint, choice
 
@@ -43,6 +45,33 @@ class Fun(Cog):
         if not self.bot.ready:
             self.bot.cogs_ready.ready_up("fun")
         await self.bot.stdout.send('[INFO: `Fun` cog loaded...]')
+
+    @command(name="fact")
+    async def animal_facts(self, ctx, animal: str):
+        if (animal := animal.lower()) in ('dog', 'cat', 'panda', 'fox', 'bird'):
+            fact_url = f"https://some-random-api.ml/facts/{animal}"
+            image_url = f"https://some-random-api.ml/img/{'birb' if animal=='bird' else animal}"
+
+            async with request("GET", image_url, headers=[]) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    image_link = data['link']
+                else:
+                    image_link = None
+
+            async with request("GET", fact_url, headers=[]) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    embed = Embed(title=f'{animal.title()} fact',
+                                  description=data['fact'],
+                                  colour=ctx.author.color)
+                    if image_link is not None:
+                        embed.set_image(url=image_link)
+                    await ctx.send(embed=embed)
+                else:
+                    await ctx.send(f'API returned a {response.status} status.')
+        else:
+            await ctx.send(f'No facts are available for {animal}')
 
 
 def setup(bot):
