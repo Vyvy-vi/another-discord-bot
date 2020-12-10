@@ -53,6 +53,7 @@ class Bot(BotBase):
     def setup(self):
         for cog in COGS:
             self.load_extension(f'src.cogs.{cog}')
+        # self.load_extension('jishaku')
         print('  Setup Complete')
 
     def run(self, version):
@@ -91,7 +92,7 @@ class Bot(BotBase):
             await args[0].send("Something went wrong")
 
         await self.stdout.send(f"```An Error Occured in {self.guild} -\n{err}```")
-        raise
+        raise err
 
     async def on_command_error(self, ctx, exc):
         if any([isinstance(exc, error) for error in IGNORE_EXCEPTIONS]):
