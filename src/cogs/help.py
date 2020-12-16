@@ -79,6 +79,7 @@ class Help(Cog):
     async def on_ready(self):
         if not self.bot.ready:
             self.bot.cogs_ready.ready_up("help")
+        await self.bot.stdout.send('[INFO: `Help` cog loaded...]')
 
 
 def setup(bot):

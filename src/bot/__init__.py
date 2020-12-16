@@ -14,13 +14,18 @@ from discord.ext.commands import (CommandNotFound,
                                   BadArgument,
                                   MissingRequiredArgument,
                                   CommandOnCooldown)
+from discord.ext.commands import when_mentioned_or
 
 from ..db import db
 
-PREFIX = '.'
 OWNER_IDS = [558192816308617227]
 COGS = [path.split("/")[-1][:-3] for path in glob("./src/cogs/*.py")]
 IGNORE_EXCEPTIONS = (CommandNotFound, BadArgument)
+
+
+def get_prefix(bot, message):
+    prefix = db.field("SELECT Prefix FROM guilds WHERE GuildID = ?", message.guild.id)
+    return when_mentioned_or(prefix)(bot, message)
 
 
 class Bot_Ready(object):
@@ -38,7 +43,6 @@ class Bot_Ready(object):
 
 class Bot(BotBase):
     def __init__(self):
-        self.PREFIX = PREFIX
         self.ready = False
         self.cogs_ready = Bot_Ready()
 
@@ -46,14 +50,14 @@ class Bot(BotBase):
         self.scheduler = AsyncIOScheduler()
 
         db.autosave(self.scheduler)
-        super().__init__(command_prefix=PREFIX,
+        super().__init__(command_prefix=get_prefix,
                          owner_ids=OWNER_IDS,
                          intents=Intents.all())
 
     def setup(self):
         for cog in COGS:
             self.load_extension(f'src.cogs.{cog}')
-        # self.load_extension('jishaku')
+        self.load_extension('jishaku')
         print('  Setup Complete')
 
     def run(self, version):
