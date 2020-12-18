@@ -24,7 +24,7 @@ IGNORE_EXCEPTIONS = (CommandNotFound, BadArgument)
 
 
 def get_prefix(bot, message):
-    prefix = db.field("SELECT Prefix FROM guilds WHERE GuildID = ?", message.guild.id)
+    prefix = db.field("SELECT Prefix FROM guilds WHERE GuildID = ?", str(message.guild.id))
     return when_mentioned_or(prefix)(bot, message)
 
 

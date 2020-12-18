@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS guilds(
-    GuildID integer PRIMARY KEY,
-    Prefix text DEFAULT "."
+    GuildID TEXT PRIMARY KEY,
+    Prefix TEXT DEFAULT "."
 );
 
 CREATE TABLE IF NOT EXISTS exp (
-    UserId integer PRIMARY KEY,
-    XP integer DEFAULT 0,
+    UserId TEXT PRIMARY KEY,
+    XP BIGINT DEFAULT 0,
     Level integer DEFAULT 0,
     XPLock text DEFAULT CURRENT_TIMESTAMP
 );
