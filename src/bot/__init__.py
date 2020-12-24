@@ -123,6 +123,7 @@ class Bot(BotBase):
 
             self.guild = self.get_guild(778704923553693746)
             self.stdout = self.get_channel(779383905798193193)
+            self.greetchannel = self.get_channel(791703335060635649)
             self.scheduler.add_job(self.print_message, CronTrigger(minute=0, second=0))
             self.scheduler.start()
 
