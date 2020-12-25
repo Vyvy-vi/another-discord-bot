@@ -16,7 +16,7 @@ class Conf(Cog):
             await ctx.send('Prefix can-not be of more than 7 characters...')
 
         else:
-            db.execute("UPDATE guilds SET Prefix = ? WHERE GuildID = ?", new, str(ctx.guild.id))
+            db.execute("UPDATE guilds SET Prefix = ? WHERE GuildId = ?", new, str(ctx.guild.id))
             await ctx.send(f"The Prefix has been sent to {new}")
 
     @change_prefix.error
